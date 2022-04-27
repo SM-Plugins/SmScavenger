@@ -1,0 +1,11 @@
+name: SmScavenger
+version: '${project.version}'
+main: me.smudge.smscavenger.SmScavenger
+api-version: 1.18
+authors: [ Smudge ]
+depend:
+  - HeadDatabase
+commands:
+  scav:
+    usage: /scav <command>
+    description: Main Command, do /scav for help
