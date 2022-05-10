@@ -89,7 +89,8 @@ public class GMenu extends GUI {
 
                 GTreasure editor = new GTreasure(treasure.getID());
                 editor.open(player);
-            }); slot += 1;
+            });
+            slot += 1;
         }
     }
 }

@@ -77,7 +77,10 @@ public class EGUI implements Listener {
         GUI.openInventories.remove(playerUUID);
 
         if (chatEvents.containsKey(player.getName())) return;
-        if (cancelMovable) {cancelMovable = false; return;}
+        if (cancelMovable) {
+            cancelMovable = false;
+            return;
+        }
 
         if (inventoryUUID != null){
             GUI gui = GUI.getInventoriesByUUID().get(inventoryUUID);

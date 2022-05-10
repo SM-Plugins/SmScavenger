@@ -157,7 +157,8 @@ public class CLocations {
             Location location = getLocation(key);
 
             if (!CTreasures.get().getKeys(false).contains(ID)) {
-                CLocations.removeLocation(location); continue;
+                CLocations.removeLocation(location);
+                continue;
             }
 
             Treasure treasure = CTreasures.getTreasure(ID);

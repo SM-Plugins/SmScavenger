@@ -70,7 +70,10 @@ public class CData {
     public void reload() {this.configFile = YamlConfiguration.loadConfiguration(this.file);}
 
     public void reset() {
-        if (!this.file.delete()) {Send.log("Data config error occurred"); return;}
+        if (!this.file.delete()) {
+            Send.log("Data config error occurred");
+            return;
+        }
         this.setup();
         this.get().options().copyDefaults(true);
         this.save();
