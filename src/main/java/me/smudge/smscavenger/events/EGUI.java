@@ -16,6 +16,7 @@
 package me.smudge.smscavenger.events;
 
 import me.smudge.smscavenger.guis.GUI;
+import me.smudge.smscavenger.utility.Send;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -58,7 +59,11 @@ public class EGUI implements Listener {
 
             if (clickAction != null){clickAction.click(player);}
 
-            if (chatAction != null) {chatEvents.put(player.getName(), chatAction); player.closeInventory();}
+            if (chatAction != null) {
+                chatEvents.put(player.getName(), chatAction);
+                player.closeInventory();
+                Send.player(player, "{prefix} Please type in chat the value for this option.");
+            }
         }
     }
 

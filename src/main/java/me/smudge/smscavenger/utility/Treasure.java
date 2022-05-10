@@ -16,12 +16,18 @@
 package me.smudge.smscavenger.utility;
 
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
+import me.smudge.smscavenger.configs.CLocations;
+import me.smudge.smscavenger.configs.CTreasures;
+import me.smudge.smscavenger.dependencys.HeadDatabase;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Firework;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Objects;
 
 public class Treasure {
 
@@ -32,6 +38,8 @@ public class Treasure {
     Particle particleType;
     int particleAmount;
     Sound soundType;
+    boolean firework;
+    boolean randomise;
 
     /**
      * Initializes class
@@ -87,15 +95,33 @@ public class Treasure {
     }
 
     /**
+     * @param firework Will a firework appear
+     */
+    public void setFirework(boolean firework) {
+        this.firework = firework;
+    }
+
+    /**
+     * @param randomise Randomise which location is used
+     */
+    public void setRandomise(boolean randomise) {this.randomise = randomise;}
+
+    /**
      * @param location Location of where to place the treasure
      */
     public void place(Location location) {
         Block block = location.getBlock();
 
         if (this.HDB != null) {
-            HeadDatabaseAPI API = new HeadDatabaseAPI();
+            if (HeadDatabase.get() == null) {
+                Send.log(this.ID + ": Tried placing but the plugin HeadDatabase doesnt exist. {loc} location has been deleted"
+                        .replace("{loc}", CLocations.getLocationID(location)));
+
+                CLocations.removeLocation(location);
+                return;
+            }
             block.setType(Material.PLAYER_HEAD);
-            API.setBlockSkin(block, this.HDB);
+            HeadDatabase.get().setBlockSkin(block, this.HDB);
         }
 
         if (this.material != null && this.material != Material.AIR) {
@@ -155,6 +181,20 @@ public class Treasure {
     }
 
     /**
+     * @return boolean is there a firework
+     */
+    public boolean getFirework() {
+        return this.firework;
+    }
+
+    /**
+     * @return boolean will the locations be randomised
+     */
+    public boolean getRandomise() {
+        return this.randomise;
+    }
+
+    /**
      * @return ItemStack treasure item
      */
     public ItemStack getItemStack() {
@@ -162,7 +202,12 @@ public class Treasure {
 
         if (this.getHDB() == null) return item;
 
-        HeadDatabaseAPI API = new HeadDatabaseAPI();
-        return API.getItemHead(this.getHDB());
+        if (HeadDatabase.get() == null) return new ItemStack(Material.PLAYER_HEAD);
+        return Objects.requireNonNull(HeadDatabase.get()).getItemHead(this.getHDB());
+    }
+
+    public void delete() {
+        CTreasures.get().set(this.ID, null);
+        CTreasures.save();
     }
 }

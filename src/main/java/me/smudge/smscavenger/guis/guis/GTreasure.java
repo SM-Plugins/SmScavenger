@@ -15,10 +15,12 @@
 
 package me.smudge.smscavenger.guis.guis;
 
-import me.arcaniax.hdb.api.HeadDatabaseAPI;
+import me.smudge.smscavenger.configs.CLocations;
 import me.smudge.smscavenger.configs.CTreasures;
+import me.smudge.smscavenger.dependencys.HeadDatabase;
 import me.smudge.smscavenger.events.EGUI;
 import me.smudge.smscavenger.guis.GUI;
+import me.smudge.smscavenger.utility.QuickLore;
 import me.smudge.smscavenger.utility.Send;
 import me.smudge.smscavenger.utility.Task;
 import me.smudge.smscavenger.utility.Treasure;
@@ -28,6 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
@@ -86,8 +89,9 @@ public class GTreasure extends GUI {
 
         setChangeableItem(13, item, itemStack -> {
             if (itemStack.getType() == Material.PLAYER_HEAD) {
-                HeadDatabaseAPI api = new HeadDatabaseAPI();
-                CTreasures.get().set(this.treasureID + ".HDB", api.getItemID(itemStack));
+                if (HeadDatabase.get() == null) return;
+
+                CTreasures.get().set(this.treasureID + ".HDB", HeadDatabase.get().getItemID(itemStack));
                 CTreasures.get().set(this.treasureID + ".material", false);
                 CTreasures.save();
 
@@ -103,11 +107,16 @@ public class GTreasure extends GUI {
         ItemStack item = new ItemStack(Material.NAME_TAG);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(Send.convert("&6&lChange ID"));
+        meta.setDisplayName(Send.convert("&6&lID"));
+        QuickLore.set(meta, "&7Click to change ID");
+        QuickLore.set(meta, "&7Changing this ID will also change locations for you <3");
+        QuickLore.add(meta, "&aCurrent &e" + treasure.getID());
         item.setItemMeta(meta);
 
         setChatItem(27, item, value -> {
             this.treasure.setID(value);
+            CLocations.changeIDs(this.treasureID, value);
+
             CTreasures.get().set(this.treasureID, null);
             CTreasures.createTreasure(this.treasure);
             CTreasures.save();
@@ -116,7 +125,9 @@ public class GTreasure extends GUI {
             editor.open(this.player);
         });
 
-        meta.setDisplayName(Send.convert("&6&lChange Reward Kit"));
+        meta.setDisplayName(Send.convert("&6&lReward Kit"));
+        QuickLore.set(meta, "&7Click to change Rewarded kit");
+        QuickLore.add(meta, "&aCurrent &e" + treasure.getKitReward());
         item.setItemMeta(meta);
         item.setType(Material.CHEST_MINECART);
 
@@ -128,7 +139,9 @@ public class GTreasure extends GUI {
             editor.open(this.player);
         });
 
-        meta.setDisplayName(Send.convert("&6&lChange Particle Type"));
+        meta.setDisplayName(Send.convert("&6&lParticle Type"));
+        QuickLore.set(meta, "&7Click to change particle type");
+        QuickLore.add(meta, "&aCurrent &e" + treasure.getParticleType());
         item.setItemMeta(meta);
         item.setType(Material.FIREWORK_ROCKET);
 
@@ -140,7 +153,9 @@ public class GTreasure extends GUI {
             editor.open(this.player);
         });
 
-        meta.setDisplayName(Send.convert("&6&lChange Particle Amount"));
+        meta.setDisplayName(Send.convert("&6&lParticle Amount"));
+        QuickLore.set(meta, "&7Click to change particle amount");
+        QuickLore.add(meta, "&aCurrent &e" + treasure.getParticleAmount());
         item.setItemMeta(meta);
         item.setType(Material.FIREWORK_ROCKET);
 
@@ -152,7 +167,9 @@ public class GTreasure extends GUI {
             editor.open(this.player);
         });
 
-        meta.setDisplayName(Send.convert("&6&lChange Sound Type"));
+        meta.setDisplayName(Send.convert("&6&lSound Type"));
+        QuickLore.set(meta, "&7Click to change sound type");
+        QuickLore.add(meta, "&aCurrent &e" + treasure.getSoundType());
         item.setItemMeta(meta);
         item.setType(Material.MUSIC_DISC_CHIRP);
 
@@ -164,13 +181,54 @@ public class GTreasure extends GUI {
             editor.open(this.player);
         });
 
+        meta.setDisplayName(Send.convert("&6&lFirework"));
+        QuickLore.set(meta, "&7Input ether false or true");
+        QuickLore.add(meta, "&aCurrent &e" + treasure.getFirework());
+        item.setItemMeta(meta);
+        item.setType(Material.FIREWORK_ROCKET);
+
+        setChatItem(32, item, value -> {
+            if (value.toLowerCase(Locale.ROOT).contains("false")) {
+                CTreasures.get().set(this.treasureID + ".firework", false);
+            }
+            if (value.toLowerCase(Locale.ROOT).contains("true")) {
+                CTreasures.get().set(this.treasureID + ".firework", true);
+            }
+            CTreasures.save();
+
+            GTreasure editor = new GTreasure(this.treasureID);
+            editor.open(this.player);
+        });
+
+        meta.setDisplayName(Send.convert("&6&lRandomise"));
+        QuickLore.set(meta, "&fThis will only spawn the treasure");
+        QuickLore.add(meta, "&fat half of the locations set, picked");
+        QuickLore.add(meta, "&fat random");
+        QuickLore.add(meta, "&7Input ether false or true");
+        QuickLore.add(meta, "&aCurrent &e" + treasure.getRandomise());
+        item.setItemMeta(meta);
+        item.setType(Material.MAGENTA_GLAZED_TERRACOTTA);
+
+        setChatItem(33, item, value -> {
+            if (value.toLowerCase(Locale.ROOT).contains("false")) {
+                CTreasures.get().set(this.treasureID + ".randomise", false);
+            }
+            if (value.toLowerCase(Locale.ROOT).contains("true")) {
+                CTreasures.get().set(this.treasureID + ".randomise", true);
+            }
+            CTreasures.save();
+
+            GTreasure editor = new GTreasure(this.treasureID);
+            editor.open(this.player);
+        });
+
         meta.setDisplayName(Send.convert("&c&lDelete"));
+        QuickLore.set(meta, "&7once deleted the treasure cannot be recovered");
         item.setItemMeta(meta);
         item.setType(Material.RED_STAINED_GLASS_PANE);
 
         setItemClick(49, item, player -> {
-            CTreasures.get().set(this.treasureID, null);
-            CTreasures.save();
+            this.treasure.delete();
 
             EGUI.cancelMovable = true;
             player.closeInventory();

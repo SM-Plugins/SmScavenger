@@ -59,20 +59,25 @@ public class Find extends SubCommand {
     public boolean preform(Player player, String[] args, Plugin plugin) {
         ArrayList<Location> locations = CLocations.getTreasuresLeft(5);
 
+        // Send the player a list of treasure yet to be found
+        Send.player(player, "&8&m&l--------]&r &6&lFind &8&m&l[--------\n");
+
         for (Location location : locations) {
+            Send.player(player, "&aTreasure ID &e" + CLocations.getTreasureID(location));
+
             String teleportCommand = "/tp " +
-                    String.valueOf(location.getBlockX()) + " " +
-                    String.valueOf(location.getBlockY()) + " " +
-                    String.valueOf(location.getBlockZ());
-            TextComponent message = new TextComponent(
-                    Send.convert("{prefix} &eTreasure location &7- &a&lCLICK HERE &fto teleport!")
-            );
+                    location.getBlockX() + " " +
+                    location.getBlockY() + " " +
+                    location.getBlockZ();
+
+            TextComponent message = new TextComponent(Send.convert("&7&l> &7" + teleportCommand + " &f&lClick to Teleport!"));
             message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, teleportCommand));
-            message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
-                    Send.convert("&7" + teleportCommand)
-            ).create()));
+            message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Send.convert("&7" + teleportCommand)).create()));
             player.spigot().sendMessage(message);
         }
+
+        Send.player(player, "&8&m&l----------------------\n");
+        Send.player(player, "&7Max locations &f5 &8| &7Total &f" + CLocations.getAmountOfLocationsToSpawn());
         return true;
     }
 }

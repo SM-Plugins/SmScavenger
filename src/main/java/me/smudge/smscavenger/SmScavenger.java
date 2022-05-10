@@ -19,6 +19,7 @@ import me.smudge.smscavenger.commands.MainCommand;
 import me.smudge.smscavenger.configs.CConfig;
 import me.smudge.smscavenger.configs.CLocations;
 import me.smudge.smscavenger.configs.CTreasures;
+import me.smudge.smscavenger.dependencys.PlaceholderAPI;
 import me.smudge.smscavenger.events.EClickEvent;
 import me.smudge.smscavenger.events.EGUI;
 import me.smudge.smscavenger.utility.Task;
@@ -41,7 +42,6 @@ public final class SmScavenger extends JavaPlugin implements Listener {
         CLocations.save();
 
         CTreasures.setup();
-        CTreasures.setupDefaults();
         CTreasures.get().options().copyDefaults(true);
         CTreasures.save();
 
@@ -53,7 +53,7 @@ public final class SmScavenger extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new EGUI(), this);
 
         // Setup PlaceholderAPI
-        new PlaceholderAPI().register();
+        PlaceholderAPI.setup();
 
         // Setup Tasks
         Task.plugin = this;

@@ -17,6 +17,7 @@ package me.smudge.smscavenger.commands.subcommands;
 
 import me.smudge.smscavenger.commands.SubCommand;
 import me.smudge.smscavenger.configs.CConfig;
+import me.smudge.smscavenger.configs.CData;
 import me.smudge.smscavenger.configs.CLocations;
 import me.smudge.smscavenger.configs.CTreasures;
 import me.smudge.smscavenger.utility.Send;
@@ -57,6 +58,10 @@ public class Reload extends SubCommand {
         CConfig.reload();
         CLocations.reload();
         CTreasures.reload();
+
+        // Get and reload
+        CData data = new CData();
+        data.reload();
 
         Send.player(player, CConfig.getMessageReloaded());
         return true;

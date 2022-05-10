@@ -19,6 +19,8 @@ import me.smudge.smscavenger.configs.CConfig;
 import me.smudge.smscavenger.configs.CData;
 import me.smudge.smscavenger.configs.CLocations;
 import me.smudge.smscavenger.configs.CTreasures;
+import me.smudge.smscavenger.utility.FireworkSpawner;
+import me.smudge.smscavenger.utility.RunCommand;
 import me.smudge.smscavenger.utility.Send;
 import me.smudge.smscavenger.utility.Treasure;
 import org.bukkit.Location;
@@ -77,10 +79,15 @@ public class EClickEvent implements Listener {
         world.spawnParticle(treasure.getParticleType(), location, treasure.getParticleAmount());
         world.playSound(location, treasure.getSoundType(), 1, 1);
 
+        if (treasure.getFirework()) FireworkSpawner.spawn(location);
+
         // Broadcast
         String message = CConfig.getMessageTreasureFound();
         Send.all(message
                 .replace("{player}", player.getName())
                 .replace("{treasureID}", treasure.getID()));
+
+        // Give reward
+        if (treasure.getKitReward() != null) {RunCommand.asOp(player, "kit " + treasure.getKitReward());}
     }
 }

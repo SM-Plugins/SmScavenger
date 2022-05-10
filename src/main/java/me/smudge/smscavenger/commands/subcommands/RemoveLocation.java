@@ -63,6 +63,7 @@ public class RemoveLocation extends SubCommand {
         // Remove treasure
         location.getBlock().setType(Material.AIR);
 
+        // Send message
         Send.player(player, CConfig.getMessageRemoveLocation());
         return true;
     }

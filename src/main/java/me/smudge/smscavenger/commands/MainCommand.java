@@ -31,13 +31,11 @@ import java.util.Objects;
 public class MainCommand implements TabExecutor {
 
     private static final ArrayList<SubCommand> subCommands = new ArrayList<>();
-
     public static ArrayList<SubCommand> getSubCommands() {
         return subCommands;
     }
 
     public static String mainCommandName;
-
     public static Plugin plugin;
 
     public MainCommand(SmScavenger pluginUpdate, String nameUpdate){
@@ -52,16 +50,90 @@ public class MainCommand implements TabExecutor {
         subCommands.add(new Edit());
     }
 
-    public static boolean check(Player player, String permission) {
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player)) return false;
+        Player player = (Player) sender;
+
+        // Send help Message
+        if (args.length == 0) {return sendHelpMessage(player);}
+
+        // Get Command
+        SubCommand subCommand = getCommandFromName(args[0]);
+        if (subCommand == null) {return sendHelpMessage(player);}
+
+        // Check permission
+        if (!checkPermission(player, subCommand.getPermission())) return noPermissionMessage(player);
+
+        // Check arguments
+        if (subCommand.getRequiredArguments() + 1 > args.length)
+            return noArgumentMessage(player, subCommand.getName(), subCommand.getRequiredArguments());
+
+        // Run command
+        subCommand.preform(player, args, plugin);
+        return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player)) return null;
+        Player player = (Player) sender;
+
+        // Choose SubCommand
+        if (args.length == 1) {
+            ArrayList<String> subcommandsArguments = new ArrayList<>();
+
+            for (int i = 0; i < getSubCommands().size(); i++) {
+                // Check permissions
+                if (!checkPermission(player, getSubCommands().get(i).getPermission())) continue;
+                // Add
+                subcommandsArguments.add(getSubCommands().get(i).getName());
+            }
+            return subcommandsArguments;
+
+        } else {
+            SubCommand subCommand = getCommandFromName(args[0]);
+            // Alternative, if there are no arguments to choose from
+            List<String> alt = new ArrayList<>();
+            alt.add("No Arguments required");
+
+            try {
+                List<String> tab = Objects.requireNonNull(subCommand).getTabComplete().get(args.length - 1);
+                if (tab == null) {return alt;}
+                return Objects.requireNonNull(subCommand).getTabComplete().get(args.length - 1);
+
+            } catch (Exception e) {return alt;}
+        }
+    }
+
+    /**
+     * @param player Player to test permission
+     * @param permission permission to test
+     * @return if they have the permission
+     */
+    public static boolean checkPermission(Player player, String permission) {
         return player.hasPermission(mainCommandName + "." + permission);
     }
 
-    public static boolean help(Player player) {
+    /**
+     * @param player Player to send message
+     * @return If successful
+     */
+    public static boolean noPermissionMessage(Player player) {
+        Send.playerError(player, "No Permission");
+        return true;
+    }
+
+    /**
+     * @param player Player to sent help message
+     * @return If successful
+     */
+    public static boolean sendHelpMessage(Player player) {
         StringBuilder listOfCommands = new StringBuilder();
 
-        // Loop though commands
+        // Loop though commands and format
         for (SubCommand command : getSubCommands()) {
-            if (!check(player, command.getPermission())) continue;
+            if (!checkPermission(player, command.getPermission())) continue;
 
             listOfCommands.append("&e/{mainCommand} {command} &7{desc}\n"
                     .replace("{mainCommand}", mainCommandName)
@@ -69,6 +141,7 @@ public class MainCommand implements TabExecutor {
                     .replace("{desc}", command.getDescription()));
         }
 
+        // Format message
         String message = "&8&m&l--------]&r &6&l{plugin} &8&m&l[--------\n" +
                 "&7Version &f" + plugin.getDescription().getVersion() + "\n" +
                 "&7Created by &fSmudge\n" +
@@ -76,81 +149,37 @@ public class MainCommand implements TabExecutor {
                 listOfCommands.toString() +
                 "&8&m&l-------------------------";
 
+        // Send message
         Send.player(player, message.replace("{plugin}", plugin.getName()));
         return true;
     }
 
-    public static boolean noPermission(Player player) {
-        Send.playerError(player, "No Permission");
-        return true;
-    }
-
-    public static boolean noArgument(Player player, String subCommand, int arguments) {
+    /**
+     * @param player Player to send message
+     * @param subCommand Command that the player tried to use
+     * @param arguments Amount of arguments required
+     * @return If successful
+     */
+    public static boolean noArgumentMessage(Player player, String subCommand, int arguments) {
         StringBuilder message = new StringBuilder("/{main} {subcommand}"
                 .replace("{main}", mainCommandName)
                 .replace("{subcommand}", subCommand));
+
         for (int i = 0; i < arguments; i++) {message.append(" <Argument>");}
+
         Send.playerError(player, message.toString());
         return true;
     }
 
+    /**
+     * @param name String name of command
+     * @return SubCommand class
+     */
     public static SubCommand getCommandFromName(String name) {
         for (int i = 0; i < getSubCommands().size(); i++) {
-            if (!Objects.equals(getSubCommands().get(i).getName(), name)) continue;
+            if (!name.equalsIgnoreCase(getSubCommands().get(i).getName())) continue;
             return getSubCommands().get(i);
         }
         return null;
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-
-            if (args.length == 0) {return help(player);}
-
-            for (int i = 0; i < getSubCommands().size(); i++) {
-                if (args[0].equalsIgnoreCase(getSubCommands().get(i).getName())) {
-                    // Check permission
-                    if (!check(player, getSubCommands().get(i).getPermission())) return noPermission(player);
-                    // Check arguments
-                    System.out.println(args.length);
-                    if (getSubCommands().get(i).getRequiredArguments() + 1 > args.length) return noArgument(player,
-                            getSubCommands().get(i).getName(),
-                            getSubCommands().get(i).getRequiredArguments());
-
-                    getSubCommands().get(i).preform(player, args, plugin);
-                }
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        // SubCommand
-        if (args.length == 1) {
-            ArrayList<String> subcommandsArguments = new ArrayList<>();
-
-            for (int i = 0; i < getSubCommands().size(); i++) {
-                Player player = (Player) sender;
-
-                if (!check(player, getSubCommands().get(i).getPermission())) continue;
-                subcommandsArguments.add(getSubCommands().get(i).getName());
-            }
-            return subcommandsArguments;
-
-        } else {
-            SubCommand commandInArg1 = getCommandFromName(args[0]);
-            List<String> alt = new ArrayList<>();
-            alt.add("No Arguments required");
-
-            try {
-                List<String> tab = Objects.requireNonNull(commandInArg1).getTabComplete().get(args.length - 1);
-                if (tab == null) {return alt;}
-                return Objects.requireNonNull(commandInArg1).getTabComplete().get(args.length - 1);
-            } catch (Exception e) {return alt;}
-        }
     }
 }

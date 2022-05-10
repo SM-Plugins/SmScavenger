@@ -52,6 +52,7 @@ public class Edit extends SubCommand {
     @Override
     public boolean preform(Player player, String[] args, Plugin plugin) {
 
+        // Create a new instance of the menu
         GMenu menu = new GMenu();
         menu.open(player);
 

@@ -73,6 +73,6 @@ public class Send {
      * @param message Message to log in console
      */
     public static void log(String message) {
-        Bukkit.getLogger().info(message);
+        Bukkit.getLogger().info(convert("&6&lSmScavenger &a" + message));
     }
 }

@@ -18,13 +18,13 @@ package me.smudge.smscavenger.configs;
 import me.smudge.smscavenger.utility.Treasure;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 
 public class CLocations {
 
@@ -57,7 +57,7 @@ public class CLocations {
      * @param location Location of treasure
      * @return String Location key
      */
-    private static String getLocationID(Location location) {
+    public static String getLocationID(Location location) {
         return String.valueOf(location.getBlockX()) +
                 String.valueOf(location.getBlockY()) +
                 String.valueOf(location.getBlockZ());
@@ -116,7 +116,10 @@ public class CLocations {
     public static boolean removeLocation(Location location) {
         String ID = getLocationID(location);
 
-        try {CLocations.get().set(ID, null); return true;
+        try {
+            CLocations.get().set(ID, null);
+            CLocations.save();
+            return true;
         } catch (Exception e) {return false;}
     }
 
@@ -133,8 +136,23 @@ public class CLocations {
         );
     }
 
+    public static HashMap<String, Integer> getRandomTreasure() {
+        HashMap<String, Integer> toReturn = new HashMap<>();
+        for (Treasure treasure : CTreasures.getAllTreasure()) {
+            if (!treasure.getRandomise()) continue;
+            int amount = getTotalTreasure(treasure.getID());
+            toReturn.put(treasure.getID(), amount / 2);
+        }
+        return toReturn;
+    }
+
     public static void placeAllTreasure() {
-        for (String key : CLocations.get().getKeys(false)) {
+        ArrayList<String> keys = new ArrayList<>(CLocations.get().getKeys(false));
+        Collections.shuffle(keys);
+
+        HashMap<String, Integer> randomTreasure = getRandomTreasure();
+
+        for (String key : keys) {
             String ID = CLocations.get().getString(key + ".treasure ID");
             Location location = getLocation(key);
 
@@ -143,6 +161,14 @@ public class CLocations {
             }
 
             Treasure treasure = CTreasures.getTreasure(ID);
+            location.getBlock().setType(Material.AIR);
+            setPresent(location, false);
+
+            if (treasure.getRandomise()) {
+                if (randomTreasure.get(treasure.getID()) <= 0) continue;
+                randomTreasure.put(treasure.getID(), randomTreasure.get(treasure.getID()) - 1);
+            }
+
             treasure.place(location);
             setPresent(location);
         }
@@ -208,5 +234,31 @@ public class CLocations {
         }
 
         return locations;
+    }
+
+    public static int getAmountOfLocationsToSpawn() {
+        int amount = 0;
+
+        for (Treasure treasure : CTreasures.getAllTreasure()) {
+            if (treasure.getRandomise()) amount += getTotalTreasure(treasure.getID()) / 2;
+            else amount += getTotalTreasure(treasure.getID());
+        }
+
+        return amount;
+    }
+
+    public static String getAmountOfLocationsToSpawn(String treasureID) {
+        Treasure treasure = CTreasures.getTreasure(treasureID);
+        if (treasure.getRandomise()) return String.valueOf(getTotalTreasure(treasureID) / 2);
+        else return String.valueOf(getTotalTreasure(treasureID));
+    }
+
+    public static void changeIDs(String before, String after) {
+        for (String key : CLocations.get().getKeys(false)) {
+            String value = CLocations.get().getString(key + ".treasure ID");
+            if (!Objects.equals(value, before)) continue;
+            CLocations.get().set(key + ".treasure ID", after);
+        }
+        CLocations.save();
     }
 }

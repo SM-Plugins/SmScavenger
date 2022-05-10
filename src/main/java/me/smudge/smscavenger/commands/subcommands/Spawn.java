@@ -20,6 +20,7 @@ import me.smudge.smscavenger.commands.SubCommand;
 import me.smudge.smscavenger.configs.CConfig;
 import me.smudge.smscavenger.configs.CData;
 import me.smudge.smscavenger.configs.CLocations;
+import me.smudge.smscavenger.configs.CTreasures;
 import me.smudge.smscavenger.utility.Send;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -76,7 +77,9 @@ public class Spawn extends SubCommand {
         // Place all treasure
         CLocations.placeAllTreasure();
 
-        Send.player(player, "{prefix} Treasure has been placed");
+        // Send message
+        Send.player(player, "{prefix} &f{n} &aTreasure has been placed"
+                .replace("{n}", String.valueOf(CLocations.getAmountOfLocationsToSpawn())));
         return true;
     }
 

@@ -22,17 +22,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class SubCommand {
-
+    // Name of the subcommand
     public abstract String getName();
-
+    // Description shown in help message
     public abstract String getDescription();
-
+    // Tab complete for arguments
     public abstract HashMap<Integer, ArrayList<String>> getTabComplete();
-
+    // <MainCommand.ThisPermission>
     public abstract String getPermission();
-
+    // The amount of arguments required after the subcommand
     public abstract int getRequiredArguments();
 
+    // When the command is run
     public abstract boolean preform(Player player, String[] args, Plugin plugin);
 
 }

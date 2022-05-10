@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class GMenu extends GUI {
@@ -65,11 +66,9 @@ public class GMenu extends GUI {
         int slot = 0;
         for (Treasure treasure : treasures) {
             ItemStack item = treasure.getItemStack();
-
             ItemMeta itemMeta = item.getItemMeta();
-            assert itemMeta != null;
 
-            itemMeta.setDisplayName(Send.convert("&6&l" + treasure.getID()));
+            Objects.requireNonNull(itemMeta).setDisplayName(Send.convert("&6&l" + treasure.getID()));
 
             ArrayList<String> lore = new ArrayList<>();
             lore.add(Send.convert("&7TreasureID &f" + treasure.getID()));
@@ -79,6 +78,8 @@ public class GMenu extends GUI {
             lore.add(Send.convert("&7Particle type &f" + treasure.getParticleType()));
             lore.add(Send.convert("&7Particle amount &f" + treasure.getParticleAmount()));
             lore.add(Send.convert("&7Sound type &f" + treasure.getSoundType()));
+            lore.add(Send.convert("&7Firework on click &f" + treasure.getFirework()));
+            lore.add(Send.convert("&7Random locations &f" + treasure.getRandomise()));
 
             itemMeta.setLore(lore);
             item.setItemMeta(itemMeta);

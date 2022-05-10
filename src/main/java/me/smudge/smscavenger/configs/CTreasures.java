@@ -57,15 +57,6 @@ public class CTreasures {
         configFile = YamlConfiguration.loadConfiguration(file);
     }
 
-    public static void setupDefaults() {
-        CTreasures.get().addDefault("loveheart.HDB", "9298");
-        CTreasures.get().addDefault("loveheart.material", false);
-        CTreasures.get().addDefault("loveheart.rewards.essetials kit", "loveheart");
-        CTreasures.get().addDefault("loveheart.particle.type", "Fireworks_Spark");
-        CTreasures.get().addDefault("loveheart.particle.amount", 10);
-        CTreasures.get().addDefault("loveheart.sound.type", "Block_Note_Block_Chime");
-    }
-
     /**
      * @param path Path to parse string
      * @param alt Return this when there is an error
@@ -76,6 +67,18 @@ public class CTreasures {
             String parsed = CTreasures.get().getString(path);
             if (parsed == null) return alt;
             return parsed;
+        } catch (Exception e) {return alt;}
+    }
+
+    /**
+     * @param path Path to parse boolean
+     * @param alt Return this when there is an error
+     * @return Parsed Boolean
+     */
+    public static boolean parseBoolean(String path, boolean alt) {
+        try {
+            if (!CTreasures.get().getKeys(true).contains(path)) return alt;
+            return CTreasures.get().getBoolean(path);
         } catch (Exception e) {return alt;}
     }
 
@@ -144,6 +147,8 @@ public class CTreasures {
         treasure.setParticle(parseParticle(ID + ".particle.type", Particle.FIREWORKS_SPARK),
                 parseInt(ID + ".particle.amount", 10));
         treasure.setSound(parseSound(ID + ".sound.type", Sound.BLOCK_NOTE_BLOCK_CHIME));
+        treasure.setFirework(parseBoolean(ID + ".firework", true));
+        treasure.setRandomise(parseBoolean(ID + ".randomise", false));
 
         return treasure;
     }
@@ -160,6 +165,8 @@ public class CTreasures {
         CTreasures.get().set(ID + ".particle.type", treasure.getParticleType().toString());
         CTreasures.get().set(ID + ".particle.amount", treasure.getParticleAmount());
         CTreasures.get().set(ID + ".sound.type", treasure.getSoundType().toString());
+        CTreasures.get().set(ID + ".firework", treasure.getFirework());
+        CTreasures.get().set(ID + ".randomise", treasure.getRandomise());
 
         CTreasures.save();
     }
