@@ -9,15 +9,19 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 public class FireworkSpawner {
 
-    public static void spawn(Location location) {
+    public static void spawn(Location location, Treasure treasure) {
         location.setX(location.getBlockX() + 0.5);
         location.setZ(location.getBlockZ() + 0.5);
         Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
         FireworkMeta meta = firework.getFireworkMeta();
 
         meta.setPower(1);
-        meta.addEffects(FireworkEffect.builder().withColor(Color.YELLOW).flicker(true).build());
-        meta.addEffect(FireworkEffect.builder().withColor(Color.ORANGE).flicker(true).build());
+
+        try {
+            for (Color color : treasure.getFireworkColors()) {
+                meta.addEffect(FireworkEffect.builder().withColor(color).flicker(true).build());
+            }
+        } catch (Exception ignored) {}
 
         firework.setFireworkMeta(meta);
         Task.runTaskIn(10, firework::detonate);

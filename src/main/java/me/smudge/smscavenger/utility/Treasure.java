@@ -19,14 +19,12 @@ import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import me.smudge.smscavenger.configs.CLocations;
 import me.smudge.smscavenger.configs.CTreasures;
 import me.smudge.smscavenger.dependencys.HeadDatabase;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Treasure {
@@ -39,6 +37,7 @@ public class Treasure {
     int particleAmount;
     Sound soundType;
     boolean firework;
+    ArrayList<Color> fireworkColors = new ArrayList<>();
     boolean randomise;
 
     /**
@@ -99,6 +98,13 @@ public class Treasure {
      */
     public void setFirework(boolean firework) {
         this.firework = firework;
+    }
+
+    /**
+     * @param color Color to add the firework
+     */
+    public void addFireworkColor(Color color) {
+        this.fireworkColors.add(color);
     }
 
     /**
@@ -185,6 +191,13 @@ public class Treasure {
      */
     public boolean getFirework() {
         return this.firework;
+    }
+
+    /**
+     * @return List of colors in the firework
+     */
+    public ArrayList<Color> getFireworkColors() {
+        return this.fireworkColors;
     }
 
     /**

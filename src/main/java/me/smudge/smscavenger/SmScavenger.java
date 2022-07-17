@@ -18,6 +18,7 @@ package me.smudge.smscavenger;
 import me.smudge.smscavenger.commands.MainCommand;
 import me.smudge.smscavenger.configs.CConfig;
 import me.smudge.smscavenger.configs.CLocations;
+import me.smudge.smscavenger.configs.CLog;
 import me.smudge.smscavenger.configs.CTreasures;
 import me.smudge.smscavenger.dependencys.PlaceholderAPI;
 import me.smudge.smscavenger.events.EClickEvent;
@@ -44,6 +45,8 @@ public final class SmScavenger extends JavaPlugin implements Listener {
         CTreasures.setup();
         CTreasures.get().options().copyDefaults(true);
         CTreasures.save();
+
+        CLog.setup();
 
         // Setup Commands
         getCommand("scav").setExecutor(new MainCommand(this, "scav"));

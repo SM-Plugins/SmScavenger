@@ -15,11 +15,9 @@
 
 package me.smudge.smscavenger.configs;
 
+import me.clip.placeholderapi.libs.kyori.adventure.bossbar.BossBar;
 import me.smudge.smscavenger.utility.Treasure;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -148,6 +146,21 @@ public class CTreasures {
                 parseInt(ID + ".particle.amount", 10));
         treasure.setSound(parseSound(ID + ".sound.type", Sound.BLOCK_NOTE_BLOCK_CHIME));
         treasure.setFirework(parseBoolean(ID + ".firework", true));
+
+        System.out.println("get");
+        try {
+            for (String colour : configFile.getStringList(ID + ".firework colours")) {
+                treasure.addFireworkColor(Color.fromBGR(
+                        Integer.parseInt(colour.split(",")[0].trim()),
+                        Integer.parseInt(colour.split(",")[1].trim()),
+                        Integer.parseInt(colour.split(",")[2].trim())
+                ));
+                System.out.println(treasure.getFireworkColors().get(0));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         treasure.setRandomise(parseBoolean(ID + ".randomise", false));
 
         return treasure;

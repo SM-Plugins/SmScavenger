@@ -15,10 +15,7 @@
 
 package me.smudge.smscavenger.events;
 
-import me.smudge.smscavenger.configs.CConfig;
-import me.smudge.smscavenger.configs.CData;
-import me.smudge.smscavenger.configs.CLocations;
-import me.smudge.smscavenger.configs.CTreasures;
+import me.smudge.smscavenger.configs.*;
 import me.smudge.smscavenger.utility.FireworkSpawner;
 import me.smudge.smscavenger.utility.RunCommand;
 import me.smudge.smscavenger.utility.Send;
@@ -79,13 +76,15 @@ public class EClickEvent implements Listener {
         world.spawnParticle(treasure.getParticleType(), location, treasure.getParticleAmount());
         world.playSound(location, treasure.getSoundType(), 1, 1);
 
-        if (treasure.getFirework()) FireworkSpawner.spawn(location);
+        if (treasure.getFirework()) FireworkSpawner.spawn(location, treasure);
 
         // Broadcast
         String message = CConfig.getMessageTreasureFound();
-        Send.all(message
+        String temp = message
                 .replace("{player}", player.getName())
-                .replace("{treasureID}", treasure.getID()));
+                .replace("{treasureID}", treasure.getID());
+        Send.all(temp);
+        CLog.add(temp + "\n");
 
         // Give reward
         if (treasure.getKitReward() != null) {RunCommand.asOp(player, "kit " + treasure.getKitReward());}

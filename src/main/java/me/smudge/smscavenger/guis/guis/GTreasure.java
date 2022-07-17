@@ -200,6 +200,38 @@ public class GTreasure extends GUI {
             editor.open(this.player);
         });
 
+        meta.setDisplayName(Send.convert("&6&lAdd Firework Colour"));
+        QuickLore.set(meta, "&7Input example : &f'123, 255, 0'");
+        QuickLore.add(meta, "&aCurrent &e" + treasure.getFireworkColors());
+        item.setItemMeta(meta);
+        item.setType(Material.FIREWORK_ROCKET);
+
+        setChatItem(33, item, value -> {
+            ArrayList<String> colours = (ArrayList<String>) CTreasures.get().getStringList(this.treasureID + ".firework colours");
+            colours.add(value);
+            CTreasures.get().set(this.treasureID + ".firework colours", colours);
+
+            CTreasures.save();
+
+            GTreasure editor = new GTreasure(this.treasureID);
+            editor.open(this.player);
+        });
+
+        meta.setDisplayName(Send.convert("&6&lReset Firework Colours"));
+        QuickLore.set(meta, "&7Click to reset");
+        QuickLore.add(meta, "&aCurrent &e" + treasure.getFireworkColors());
+        item.setItemMeta(meta);
+        item.setType(Material.FIREWORK_ROCKET);
+
+        setItemClick(34, item, player -> {
+            CTreasures.get().set(this.treasureID + ".firework colours", null);
+
+            CTreasures.save();
+
+            GTreasure editor = new GTreasure(this.treasureID);
+            editor.open(this.player);
+        });
+
         meta.setDisplayName(Send.convert("&6&lRandomise"));
         QuickLore.set(meta, "&fThis will only spawn the treasure");
         QuickLore.add(meta, "&fat half of the locations set, picked");
@@ -209,7 +241,7 @@ public class GTreasure extends GUI {
         item.setItemMeta(meta);
         item.setType(Material.MAGENTA_GLAZED_TERRACOTTA);
 
-        setChatItem(33, item, value -> {
+        setChatItem(35, item, value -> {
             if (value.toLowerCase(Locale.ROOT).contains("false")) {
                 CTreasures.get().set(this.treasureID + ".randomise", false);
             }
