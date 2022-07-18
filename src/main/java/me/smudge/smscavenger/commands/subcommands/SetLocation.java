@@ -43,6 +43,19 @@ public class SetLocation extends SubCommand {
     public HashMap<Integer, ArrayList<String>> getTabComplete() {
         HashMap<Integer, ArrayList<String>> tab = new HashMap<>();
         tab.put(1, CTreasures.getIDList());
+
+        ArrayList<String> temp = new ArrayList<>();
+        temp.add("Optional X");
+        tab.put(2, temp);
+
+        temp = new ArrayList<>();
+        temp.add("Optional Y");
+        tab.put(3, temp);
+
+        temp = new ArrayList<>();
+        temp.add("Optional Z");
+        tab.put(4, temp);
+
         return tab;
     }
 
@@ -60,6 +73,16 @@ public class SetLocation extends SubCommand {
     public boolean preform(Player player, String[] args, Plugin plugin) {
         String treasureID = args[1];
         Location location = player.getLocation();
+
+        // Optional cords
+        if (args.length >= 5) {
+            location = new Location(
+                    player.getWorld(),
+                    Integer.parseInt(args[2]),
+                    Integer.parseInt(args[3]),
+                    Integer.parseInt(args[4])
+            );
+        }
 
         // Save location data
         CLocations.setLocation(location, treasureID);
