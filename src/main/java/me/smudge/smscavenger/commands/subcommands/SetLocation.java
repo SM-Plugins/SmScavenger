@@ -88,11 +88,11 @@ public class SetLocation extends SubCommand {
         CLocations.setLocation(location, treasureID);
 
         // Place treasure
-        Treasure treasure = CTreasures.getTreasure(treasureID);
-        treasure.place(location);
+        // Treasure treasure = CTreasures.getTreasure(treasureID);
+        // treasure.place(location);
 
         // Set present
-        CLocations.setPresent(location);
+        // CLocations.setPresent(location);
 
         Send.player(player, CConfig.getMessageSetLocation());
         return true;
