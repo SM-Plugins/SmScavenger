@@ -87,6 +87,8 @@ public class EClickEvent implements Listener {
         CLog.add(temp + "\n");
 
         // Give reward
-        if (treasure.getKitReward() != null) {RunCommand.asOp(player, "kit " + treasure.getKitReward());}
+        if (treasure.getCommand() != null) {
+            RunCommand.asOp(player, treasure.getCommand().replace("{player}", player.getName()));
+        }
     }
 }

@@ -125,14 +125,15 @@ public class GTreasure extends GUI {
             editor.open(this.player);
         });
 
-        meta.setDisplayName(Send.convert("&6&lReward Kit"));
-        QuickLore.set(meta, "&7Click to change Rewarded kit");
-        QuickLore.add(meta, "&aCurrent &e" + treasure.getKitReward());
+        meta.setDisplayName(Send.convert("&6&lReward"));
+        QuickLore.set(meta, "&7Click to change Rewarded command");
+        QuickLore.add(meta, "&7Placeholders: &f{player}");
+        QuickLore.add(meta, "&aCurrent &e" + treasure.getCommand());
         item.setItemMeta(meta);
         item.setType(Material.CHEST_MINECART);
 
         setChatItem(28, item, value -> {
-            CTreasures.get().set(this.treasureID + ".rewards.essetials kit", value);
+            CTreasures.get().set(this.treasureID + ".reward", value);
             CTreasures.save();
 
             GTreasure editor = new GTreasure(this.treasureID);

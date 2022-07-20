@@ -15,7 +15,6 @@
 
 package me.smudge.smscavenger.configs;
 
-import me.clip.placeholderapi.libs.kyori.adventure.bossbar.BossBar;
 import me.smudge.smscavenger.utility.Treasure;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -141,7 +140,7 @@ public class CTreasures {
 
         treasure.setMaterial(parseMaterial(ID + ".material", Material.AIR));
         treasure.setMaterial(parseString(ID + ".HDB", null));
-        treasure.setReward(parseString(ID + ".rewards.essetials kit", null));
+        treasure.setCommand(parseString(ID + ".rewards.essetials kit", null));
         treasure.setParticle(parseParticle(ID + ".particle.type", Particle.FIREWORKS_SPARK),
                 parseInt(ID + ".particle.amount", 10));
         treasure.setSound(parseSound(ID + ".sound.type", Sound.BLOCK_NOTE_BLOCK_CHIME));
@@ -174,7 +173,7 @@ public class CTreasures {
 
         CTreasures.get().set(ID + ".HDB", treasure.getHDB());
         CTreasures.get().set(ID + ".material", treasure.getMaterial().toString());
-        CTreasures.get().set(ID + ".rewards.essetials kit", treasure.getKitReward());
+        CTreasures.get().set(ID + ".reward", treasure.getCommand());
         CTreasures.get().set(ID + ".particle.type", treasure.getParticleType().toString());
         CTreasures.get().set(ID + ".particle.amount", treasure.getParticleAmount());
         CTreasures.get().set(ID + ".sound.type", treasure.getSoundType().toString());

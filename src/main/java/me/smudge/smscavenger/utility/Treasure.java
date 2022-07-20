@@ -15,13 +15,11 @@
 
 package me.smudge.smscavenger.utility;
 
-import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import me.smudge.smscavenger.configs.CLocations;
 import me.smudge.smscavenger.configs.CTreasures;
 import me.smudge.smscavenger.dependencys.HeadDatabase;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Firework;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ public class Treasure {
     String ID;
     String HDB;
     Material material;
-    String kitReward;
+    String command;
     Particle particleType;
     int particleAmount;
     Sound soundType;
@@ -71,10 +69,10 @@ public class Treasure {
     }
 
     /**
-     * @param kitReward Essentials kit to give as a reward
+     * @param command Command to execute as a reward
      */
-    public void setReward(String kitReward) {
-        this.kitReward = kitReward;
+    public void setCommand(String command) {
+        this.command = command;
     }
 
     /**
@@ -138,8 +136,8 @@ public class Treasure {
     /**
      * @return String kit reward
      */
-    public String getKitReward() {
-        return this.kitReward;
+    public String getCommand() {
+        return this.command;
     }
 
     /**

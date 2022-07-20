@@ -74,7 +74,7 @@ public class GMenu extends GUI {
             lore.add(Send.convert("&7TreasureID &f" + treasure.getID()));
             lore.add(Send.convert("&aMaterial &e" + treasure.getMaterial().toString()));
             lore.add(Send.convert("&aHDB ID &e" + treasure.getHDB()));
-            lore.add(Send.convert("&7Reward kit &f" + treasure.getKitReward()));
+            lore.add(Send.convert("&7Reward kit &f" + treasure.getCommand()));
             lore.add(Send.convert("&7Particle type &f" + treasure.getParticleType()));
             lore.add(Send.convert("&7Particle amount &f" + treasure.getParticleAmount()));
             lore.add(Send.convert("&7Sound type &f" + treasure.getSoundType()));
