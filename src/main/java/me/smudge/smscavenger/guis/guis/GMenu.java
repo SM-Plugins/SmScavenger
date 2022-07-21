@@ -68,18 +68,20 @@ public class GMenu extends GUI {
             ItemStack item = treasure.getItemStack();
             ItemMeta itemMeta = item.getItemMeta();
 
-            Objects.requireNonNull(itemMeta).setDisplayName(Send.convert("&6&l" + treasure.getID()));
+            Objects.requireNonNull(itemMeta).setDisplayName(Send.convert("&e&lTreasureID &f" + treasure.getID()));
 
             ArrayList<String> lore = new ArrayList<>();
-            lore.add(Send.convert("&7TreasureID &f" + treasure.getID()));
-            lore.add(Send.convert("&aMaterial &e" + treasure.getMaterial().toString()));
-            lore.add(Send.convert("&aHDB ID &e" + treasure.getHDB()));
-            lore.add(Send.convert("&7Reward kit &f" + treasure.getCommand()));
+            lore.add(Send.convert("&8&l&m------------------"));
+            lore.add(Send.convert("&aMaterial &6" + treasure.getMaterial().toString()));
+            lore.add(Send.convert("&aHDB ID &6" + treasure.getHDB()));
+            lore.add(Send.convert("&7Reward command &f" + treasure.getCommand()));
+            lore.add(Send.convert("&7Random locations &f" + treasure.getRandomise()));
+            lore.add(Send.convert("&8&l&m------------------"));
             lore.add(Send.convert("&7Particle type &f" + treasure.getParticleType()));
             lore.add(Send.convert("&7Particle amount &f" + treasure.getParticleAmount()));
             lore.add(Send.convert("&7Sound type &f" + treasure.getSoundType()));
             lore.add(Send.convert("&7Firework on click &f" + treasure.getFirework()));
-            lore.add(Send.convert("&7Random locations &f" + treasure.getRandomise()));
+            lore.add(Send.convert("&7Firework colors &f" + treasure.getFireworkColors()));
 
             itemMeta.setLore(lore);
             item.setItemMeta(itemMeta);

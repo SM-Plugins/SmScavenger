@@ -140,13 +140,12 @@ public class CTreasures {
 
         treasure.setMaterial(parseMaterial(ID + ".material", Material.AIR));
         treasure.setMaterial(parseString(ID + ".HDB", null));
-        treasure.setCommand(parseString(ID + ".rewards.essetials kit", null));
+        treasure.setCommand(parseString(ID + ".reward", null));
         treasure.setParticle(parseParticle(ID + ".particle.type", Particle.FIREWORKS_SPARK),
                 parseInt(ID + ".particle.amount", 10));
         treasure.setSound(parseSound(ID + ".sound.type", Sound.BLOCK_NOTE_BLOCK_CHIME));
         treasure.setFirework(parseBoolean(ID + ".firework", true));
 
-        System.out.println("get");
         try {
             for (String colour : configFile.getStringList(ID + ".firework colours")) {
                 treasure.addFireworkColor(Color.fromBGR(
@@ -154,7 +153,6 @@ public class CTreasures {
                         Integer.parseInt(colour.split(",")[1].trim()),
                         Integer.parseInt(colour.split(",")[2].trim())
                 ));
-                System.out.println(treasure.getFireworkColors().get(0));
             }
         } catch (Exception e) {
             e.printStackTrace();
