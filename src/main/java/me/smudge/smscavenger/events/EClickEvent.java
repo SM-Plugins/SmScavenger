@@ -16,10 +16,7 @@
 package me.smudge.smscavenger.events;
 
 import me.smudge.smscavenger.configs.*;
-import me.smudge.smscavenger.utility.FireworkSpawner;
-import me.smudge.smscavenger.utility.RunCommand;
-import me.smudge.smscavenger.utility.Send;
-import me.smudge.smscavenger.utility.Treasure;
+import me.smudge.smscavenger.utility.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -90,5 +87,21 @@ public class EClickEvent implements Listener {
         if (treasure.getCommand() != null) {
             RunCommand.asOp(player, treasure.getCommand().replace("{player}", player.getName()));
         }
+
+        // Respawn treasure
+        if (treasure.getTimer() == 0) return;
+
+        if (treasure.getRandomise()) {
+            location = CLocations.getRandomLocation(treasure.getID(), location);
+            treasure = CTreasures.getTreasure(CLocations.getTreasureID(location));
+        }
+
+        Treasure finalTreasure = treasure;
+        Location finalLocation = location;
+
+        Task.runTaskIn(treasure.getTimer() * 20, () -> {
+            finalTreasure.place(finalLocation);
+            CLocations.setPresent(finalLocation);
+        });
     }
 }

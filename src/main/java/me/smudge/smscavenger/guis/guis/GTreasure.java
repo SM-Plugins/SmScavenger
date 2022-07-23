@@ -117,7 +117,7 @@ public class GTreasure extends GUI {
         QuickLore.add(meta, "&aCurrent &e" + treasure.getID());
         item.setItemMeta(meta);
 
-        setChatItem(19, item, value -> {
+        setChatItem(10, item, value -> {
             this.treasure.setID(value);
             CLocations.changeIDs(this.treasureID, value);
 
@@ -136,7 +136,7 @@ public class GTreasure extends GUI {
         item.setItemMeta(meta);
         item.setType(Material.CHEST_MINECART);
 
-        setChatItem(28, item, value -> {
+        setChatItem(19, item, value -> {
             CTreasures.get().set(this.treasureID + ".reward", value);
             CTreasures.save();
 
@@ -239,8 +239,23 @@ public class GTreasure extends GUI {
         item.setItemMeta(meta);
         item.setType(Material.MAGENTA_GLAZED_TERRACOTTA);
 
-        setItemClick(37, item, player -> {
+        setItemClick(28, item, player -> {
             CTreasures.get().set(this.treasureID + ".randomise", !treasure.getRandomise());
+            CTreasures.save();
+
+            GTreasure editor = new GTreasure(this.treasureID);
+            editor.open(this.player);
+        });
+
+        meta.setDisplayName(Send.convert("&6&lRespawn Timer"));
+        QuickLore.set(meta, "&7This will respawn the treasure when broken");
+        QuickLore.add(meta, "&7to disable set to 0");
+        QuickLore.add(meta, "&aCurrent &e" + treasure.getTimer() + "s");
+        item.setItemMeta(meta);
+        item.setType(Material.CLOCK);
+
+        setChatItem(37, item, value -> {
+            CTreasures.get().set(this.treasureID + ".timer", Integer.parseInt(value));
             CTreasures.save();
 
             GTreasure editor = new GTreasure(this.treasureID);

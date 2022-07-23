@@ -102,11 +102,4 @@ public class PlaceholderAPI extends PlaceholderExpansion {
     private String getTotal(String treasureID) {
         return CLocations.getAmountOfLocationsToSpawn(treasureID);
     }
-
-    public static void setup() {
-        try {new PlaceholderAPI().register();}
-        catch (Exception e) {
-            Send.log("PlaceholderAPI does not exist: placeholders disabled.");
-        }
-    }
 }

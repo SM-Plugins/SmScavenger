@@ -37,6 +37,7 @@ public class Treasure {
     boolean firework;
     ArrayList<Color> fireworkColors = new ArrayList<>();
     boolean randomise;
+    int respawnTime;
 
     /**
      * Initializes class
@@ -109,6 +110,13 @@ public class Treasure {
      * @param randomise Randomise which location is used
      */
     public void setRandomise(boolean randomise) {this.randomise = randomise;}
+
+    /**
+     * @param timer The time between breaking and respawning the treasure
+     */
+    public void setTimer(int timer) {
+        this.respawnTime = timer;
+    }
 
     /**
      * @param location Location of where to place the treasure
@@ -203,6 +211,13 @@ public class Treasure {
      */
     public boolean getRandomise() {
         return this.randomise;
+    }
+
+    /**
+     * @return Amount of time till respawn
+     */
+    public int getTimer() {
+        return this.respawnTime;
     }
 
     /**

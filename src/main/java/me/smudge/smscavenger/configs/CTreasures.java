@@ -112,9 +112,7 @@ public class CTreasures {
      */
     public static int parseInt(String path, int alt) {
         try {
-            String parsed = CTreasures.get().getString(path);
-            if (parsed == null) return alt;
-            return alt;
+            return CTreasures.get().getInt(path);
         } catch (Exception e) {return alt;}
     }
 
@@ -159,6 +157,7 @@ public class CTreasures {
         }
 
         treasure.setRandomise(parseBoolean(ID + ".randomise", false));
+        treasure.setTimer(parseInt(ID + ".timer", 0));
 
         return treasure;
     }
@@ -177,6 +176,7 @@ public class CTreasures {
         CTreasures.get().set(ID + ".sound.type", treasure.getSoundType().toString());
         CTreasures.get().set(ID + ".firework", treasure.getFirework());
         CTreasures.get().set(ID + ".randomise", treasure.getRandomise());
+        CTreasures.get().set(ID + ".timer", treasure.getTimer());
 
         CTreasures.save();
     }

@@ -1,7 +1,7 @@
 name: SmScavenger
 version: '${project.version}'
 main: me.smudge.smscavenger.SmScavenger
-api-version: 1.18
+api-version: 1.16
 authors: [ Smudge ]
 soft-depend:
   - HeadDatabase

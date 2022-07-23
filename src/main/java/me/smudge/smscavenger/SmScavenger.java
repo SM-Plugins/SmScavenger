@@ -23,6 +23,7 @@ import me.smudge.smscavenger.configs.CTreasures;
 import me.smudge.smscavenger.dependencys.PlaceholderAPI;
 import me.smudge.smscavenger.events.EClickEvent;
 import me.smudge.smscavenger.events.EGUI;
+import me.smudge.smscavenger.utility.Send;
 import me.smudge.smscavenger.utility.Task;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,7 +57,12 @@ public final class SmScavenger extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new EGUI(), this);
 
         // Setup PlaceholderAPI
-        PlaceholderAPI.setup();
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            try {new PlaceholderAPI().register();}
+            catch (Exception e) {
+                Send.log("PlaceholderAPI does not exist: placeholders disabled.");
+            }
+        }
 
         // Setup Tasks
         Task.plugin = this;

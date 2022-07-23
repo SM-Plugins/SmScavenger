@@ -262,4 +262,16 @@ public class CLocations {
         }
         CLocations.save();
     }
+
+    public static Location getRandomLocation(String treasureID, Location alt) {
+        ArrayList<String> keys = new ArrayList<>(CLocations.get().getKeys(false));
+        Collections.shuffle(keys);
+
+        for (String key : keys) {
+            if (!Objects.equals(CLocations.get().getString(key + ".treasure ID"), treasureID)) continue;
+            return CLocations.getLocation(key);
+        }
+
+        return alt;
+    }
 }
